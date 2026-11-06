@@ -355,6 +355,12 @@ p {
   font-size: 0.8125rem;
 }
 
+.btn-capsule {
+  border-radius: 9999px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
 /* Badges & Chips */
 .tag {
   display: inline-flex;
@@ -465,6 +471,12 @@ p {
   justify-content: center;
   gap: 1rem;
   margin-bottom: 3rem;
+}
+
+.hero-actions .btn {
+  border-radius: 9999px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 /* Metrics Grid */
