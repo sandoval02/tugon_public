@@ -65,7 +65,9 @@
 }
 
 /* Base resets & typography */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -91,7 +93,12 @@ a {
   text-decoration: none;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -135,7 +142,7 @@ p {
   box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 12%, transparent), 0 0.75rem 2rem -14px rgba(0, 0, 0, 0.45);
   display: flex;
   align-items: center;
-  transition: transform 0.45s cubic-bezier(.2,.8,.2,1), opacity 0.3s;
+  transition: transform 0.45s cubic-bezier(.2, .8, .2, 1), opacity 0.3s;
 }
 
 .nav-inner {
@@ -146,7 +153,8 @@ p {
   gap: 1.5rem;
 }
 
-.brand-link, .brand {
+.brand-link,
+.brand {
   display: flex;
   align-items: center;
   gap: 0.625rem;
@@ -190,7 +198,8 @@ p {
   transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.nav-link:hover, .nav-link.active {
+.nav-link:hover,
+.nav-link.active {
   color: var(--ink);
   background: color-mix(in srgb, var(--ink) 8%, transparent);
 }
@@ -499,6 +508,38 @@ p {
   margin-bottom: 1.25rem;
 }
 
+/* Repository copy snippet box */
+.repo-copy-box {
+  background: var(--bg);
+  padding: 0.5rem 0.625rem 0.5rem 0.875rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.repo-copy-box code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.repo-copy-box .btn {
+  flex-shrink: 0;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8125rem;
+}
+
 /* Interactive Tabs */
 .tabs-container {
   display: flex;
@@ -570,9 +611,17 @@ p {
   border-radius: 50%;
 }
 
-.dot-red { background: #ef4444; }
-.dot-yellow { background: #f59e0b; }
-.dot-green { background: #10b981; }
+.dot-red {
+  background: #ef4444;
+}
+
+.dot-yellow {
+  background: #f59e0b;
+}
+
+.dot-green {
+  background: #10b981;
+}
 
 .terminal-title {
   font-family: var(--font-mono);
@@ -711,12 +760,140 @@ p {
   .nav-links {
     display: none;
   }
+
   .hero-actions {
     flex-direction: column;
     align-items: stretch;
   }
+
   .btn {
     width: 100%;
   }
 }
 
+
+/* System dashboards */
+.screens-showcase {
+  margin-top: 3rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--line);
+}
+
+.screens-head {
+  margin-bottom: 1.5rem;
+}
+
+.screen-frame {
+  position: relative;
+  overflow: hidden;
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.screen-frame.desktop {
+  width: 100%;
+  max-width: 46rem;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.75rem;
+}
+
+.screen-frame.phone {
+  width: 14rem;
+  aspect-ratio: 9 / 19;
+  border-radius: 1.75rem;
+  border-width: 3px;
+}
+
+.screen-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  z-index: 1;
+  background: var(--card-bg);
+}
+
+.screen-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.75rem;
+  background:
+    repeating-linear-gradient(45deg, transparent 0 10px, var(--grid) 10px 11px),
+    var(--bg-2);
+}
+
+.screen-placeholder code {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--accent);
+  word-break: break-all;
+}
+
+/* Dashboard rows: image on one side, description on the other */
+.dash-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.dash-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.dash-row.reverse {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+}
+
+.dash-row.reverse .dash-media {
+  order: 2;
+}
+
+.dash-media {
+  display: flex;
+  justify-content: center;
+}
+
+.dash-text h4 {
+  font-size: 1.5rem;
+  margin: 0.875rem 0 0.625rem;
+}
+
+.dash-text p {
+  color: var(--muted);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+.dash-text ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 800px) {
+
+  .dash-row,
+  .dash-row.reverse {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dash-row.reverse .dash-media {
+    order: 0;
+  }
+}
