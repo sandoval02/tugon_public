@@ -407,14 +407,25 @@ p {
 
 .hero-subtitle {
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   color: var(--accent);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.875rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  flex-wrap: wrap;
+  gap: 0.625rem 0.875rem;
+}
+
+.hero-subtitle .tag {
+  white-space: nowrap;
+}
+
+.hero-institution {
+  color: var(--accent);
+  font-size: 0.8125rem;
+  letter-spacing: 0.06em;
 }
 
 .hero-title {
@@ -882,6 +893,24 @@ p {
 
   .brand-badge {
     display: none;
+  }
+
+  .hero-subtitle {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.45rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero-subtitle .tag {
+    font-size: 0.6875rem;
+    padding: 0.25rem 0.55rem;
+  }
+
+  .hero-institution {
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
   }
 }
 
