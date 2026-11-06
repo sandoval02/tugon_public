@@ -22,7 +22,10 @@ dist/
 .env.*.local
 *.log
 
-# IDE & OS
+# Documents
+*.docx
+*.doc
+
 .vscode/
 .idea/
 .DS_Store
