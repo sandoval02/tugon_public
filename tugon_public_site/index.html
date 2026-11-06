@@ -13,7 +13,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
 </head>
 
 <body>
@@ -46,8 +46,30 @@
             </svg>
           </span>
         </button>
-        <a href="#links" class="btn btn-primary btn-sm">Repository</a>
+        <a href="#links" class="btn btn-primary btn-sm btn-desktop-repo">Repository</a>
+        <button id="mobile-menu-toggle" class="icon-btn mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+          <svg class="icon-hamburger" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg class="icon-close" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display:none;">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
+    </div>
+
+    <!-- Mobile Navigation Dropdown Menu -->
+    <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+      <nav class="mobile-nav-links">
+        <a href="#overview" class="mobile-nav-link">Overview</a>
+        <a href="#team" class="mobile-nav-link">Team</a>
+        <a href="#problem" class="mobile-nav-link">Problem & Objectives</a>
+        <a href="#methodology" class="mobile-nav-link">Methodology</a>
+        <a href="#system" class="mobile-nav-link">System</a>
+        <a href="#results" class="mobile-nav-link">Results</a>
+        <a href="#links" class="mobile-nav-link">Links</a>
+        <a href="#links" class="btn btn-primary btn-sm mobile-repo-btn">View Repository</a>
+      </nav>
     </div>
   </header>
 
@@ -195,8 +217,7 @@
           <h3 class="team-name">Mazel Catherine P. Joya</h3>
           <div class="team-role">Researcher</div>
           <p class="team-bio">Led the academic documentation as primary manuscript author and composed the thesis across
-            Chapters 1 to 5 (Problem Formulation, Review of Related Literature, System Architecture Methodology,
-            ISO/IEC 25010 Quality Evaluation, and Synthesis). Also served as technical assistant on the system,
+            Chapters 1 to 5. Also served as technical assistant on the system,
             co-engineering the municipal dispatcher workflows, monthly accomplishment report modules, and interface
             design revisions, and conducting the system usability evaluations.</p>
         </div>
@@ -551,7 +572,8 @@
             <div class="dash-media">
               <div class="screen-frame desktop">
                 <img src="admin-dash.png" alt="Admin Dashboard" loading="lazy" onerror="this.remove()">
-                <div class="screen-placeholder"><span class="mono">Admin Dashboard</span><code>admin-dash.png</code></div>
+                <div class="screen-placeholder"><span class="mono">Admin Dashboard</span><code>admin-dash.png</code>
+                </div>
               </div>
             </div>
             <div class="dash-text">
@@ -571,7 +593,8 @@
             <div class="dash-media">
               <div class="screen-frame desktop">
                 <img src="officer-dash.png" alt="MAT Officer Dashboard" loading="lazy" onerror="this.remove()">
-                <div class="screen-placeholder"><span class="mono">Officer Dashboard</span><code>officer-dash.png</code></div>
+                <div class="screen-placeholder"><span class="mono">Officer Dashboard</span><code>officer-dash.png</code>
+                </div>
               </div>
             </div>
             <div class="dash-text">
@@ -591,7 +614,8 @@
             <div class="dash-media">
               <div class="screen-frame phone">
                 <img src="responder-dash.jpg" alt="Responder Dashboard" loading="lazy" onerror="this.remove()">
-                <div class="screen-placeholder"><span class="mono">Responder Dashboard</span><code>responder-dash.jpg</code></div>
+                <div class="screen-placeholder"><span class="mono">Responder
+                    Dashboard</span><code>responder-dash.jpg</code></div>
               </div>
             </div>
             <div class="dash-text">
@@ -611,7 +635,8 @@
             <div class="dash-media">
               <div class="screen-frame phone">
                 <img src="citizens-dash.jpg" alt="Citizen Dashboard" loading="lazy" onerror="this.remove()">
-                <div class="screen-placeholder"><span class="mono">Citizen Dashboard</span><code>citizens-dash.jpg</code></div>
+                <div class="screen-placeholder"><span class="mono">Citizen
+                    Dashboard</span><code>citizens-dash.jpg</code></div>
               </div>
             </div>
             <div class="dash-text">
@@ -844,7 +869,7 @@
     </div>
   </footer>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=3"></script>
 </body>
 
 </html>
