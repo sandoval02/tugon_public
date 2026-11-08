@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TUGON Final Manuscript · Read-Only Academic Preview</title>
+  <title>TUGON Final Manuscript · Protected Academic Preview</title>
   <meta name="description"
     content="Protected academic read-only preview of the TUGON Undergraduate Thesis Manuscript (LSPU CCS).">
   <link rel="icon" type="image/png" href="logo.png">
@@ -18,11 +18,7 @@
 
   <link rel="stylesheet" href="styles.css">
 
-  <!-- Mozilla PDF.js -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
   <style>
-    /* Manuscript Viewer Specific Styles */
     body {
       background: var(--bg);
       color: var(--ink);
@@ -46,7 +42,7 @@
     }
 
     .viewer-nav-inner {
-      max-width: 1300px;
+      max-width: 1400px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -58,7 +54,7 @@
     .viewer-title-group {
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.75rem;
     }
 
     .viewer-title {
@@ -74,51 +70,6 @@
       align-items: center;
       gap: 0.5rem;
       flex-wrap: wrap;
-    }
-
-    .mode-toggle-group {
-      display: inline-flex;
-      background: var(--bg-2);
-      border: 1px solid var(--line);
-      border-radius: 9999px;
-      padding: 0.15rem;
-      gap: 0.15rem;
-    }
-
-    .mode-btn {
-      padding: 0.25rem 0.65rem;
-      font-size: 0.75rem;
-      font-family: var(--font-body);
-      font-weight: 600;
-      border: none;
-      border-radius: 9999px;
-      background: transparent;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .mode-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
-
-    .page-input {
-      width: 3.25rem;
-      padding: 0.25rem 0.35rem;
-      text-align: center;
-      font-family: var(--font-mono);
-      font-size: 0.8125rem;
-      border: 1px solid var(--line);
-      background: var(--bg-2);
-      color: var(--ink);
-      border-radius: 0.375rem;
-    }
-
-    .page-input:focus {
-      outline: 2px solid var(--accent);
-      border-color: var(--accent);
     }
 
     .watermark-banner {
@@ -141,155 +92,42 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 1.25rem 1rem 3.5rem;
+      padding: 0.75rem 1rem 1.5rem;
       background: var(--bg);
       position: relative;
     }
 
-    /* Canvas Page Container */
-    .canvas-container {
-      position: relative;
-      background: #ffffff;
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--line);
-      border-radius: 4px;
-      min-width: min(100%, 760px);
-      min-height: min(85vh, 880px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      margin: 0 auto;
-      transition: box-shadow 0.2s ease;
-    }
-
-    #pdf-canvas {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      pointer-events: none;
-    }
-
-    /* Fast Native Stream Frame Container */
-    .stream-container {
+    .frame-container {
       width: 100%;
-      max-width: 1000px;
-      height: calc(100vh - 8rem);
-      min-height: 600px;
+      max-width: 1200px;
+      height: calc(100vh - 7.5rem);
+      min-height: 650px;
       background: var(--card-bg);
       border: 1px solid var(--line);
-      border-radius: 8px;
+      border-radius: 12px;
       overflow: hidden;
-      display: none;
-      box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.5);
+      position: relative;
     }
 
-    .stream-frame {
+    .viewer-frame {
       width: 100%;
       height: 100%;
       border: none;
       display: block;
     }
 
-    /* Loading Overlay */
-    .loading-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(11, 15, 20, 0.85);
-      backdrop-filter: blur(6px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      color: var(--ink);
-      font-family: var(--font-mono);
-      font-size: 0.875rem;
-      z-index: 10;
-      border-radius: 4px;
-      padding: 1.5rem;
-      text-align: center;
-      transition: opacity 0.2s ease;
-    }
-
-    .progress-bar-track {
-      width: 220px;
-      max-width: 80%;
-      height: 6px;
-      background: var(--bg-3);
-      border-radius: 9999px;
-      overflow: hidden;
-      border: 1px solid var(--line);
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
-      transition: width 0.2s ease;
-    }
-
-    .spinner {
-      width: 2.25rem;
-      height: 2.25rem;
-      border: 3px solid var(--line);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .bottom-bar {
-      position: fixed;
-      bottom: 1rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 90;
-      background: color-mix(in srgb, var(--bg-2) 90%, transparent);
-      backdrop-filter: blur(1rem);
-      -webkit-backdrop-filter: blur(1rem);
-      border: 1px solid var(--line);
-      border-radius: 9999px;
-      padding: 0.35rem 0.75rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
-    }
-
-    .quick-jump-select {
-      background: var(--bg-2);
-      color: var(--ink);
-      border: 1px solid var(--line);
-      font-family: var(--font-body);
-      font-size: 0.8125rem;
-      padding: 0.3rem 0.5rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-    }
-
-    @media (max-width: 900px) {
-      .quick-jump-select {
-        display: none;
-      }
-    }
-
     @media (max-width: 768px) {
       .viewer-title {
         font-size: 0.8125rem;
       }
-      .canvas-container {
+      .frame-container {
+        height: calc(100vh - 8.5rem);
         min-height: 500px;
-        min-width: 100%;
+        border-radius: 8px;
       }
-      .bottom-bar {
-        bottom: 0.5rem;
-        padding: 0.3rem 0.5rem;
+      .viewer-main {
+        padding: 0.5rem 0.5rem 1rem;
       }
     }
   </style>
@@ -317,61 +155,18 @@
           Overview
         </a>
         <div class="viewer-title">TUGON Research Manuscript</div>
-
-        <!-- Mode Toggle: Canvas vs Native Stream -->
-        <div class="mode-toggle-group" title="Switch Reader Engine">
-          <button id="mode-canvas" class="mode-btn active" title="Canvas Reader with Security Watermark">Canvas</button>
-          <button id="mode-stream" class="mode-btn" title="Native Instant Browser Stream">Fast Stream</button>
-        </div>
+        <span class="tag tag-accent" style="font-size: 0.6875rem;">View-Only (479 Pages)</span>
       </div>
 
-      <div class="viewer-controls" id="canvas-controls">
-        <!-- Quick Jump -->
-        <select id="quick-jump" class="quick-jump-select" title="Jump to Chapter">
-          <option value="1">Cover &amp; Title Page</option>
-          <option value="4">Approval Sheet</option>
-          <option value="7">Abstract</option>
-          <option value="12">Table of Contents</option>
-          <option value="17">Chapter 1: Introduction</option>
-          <option value="42">Chapter 2: Literature Review</option>
-          <option value="85">Chapter 3: Methodology</option>
-          <option value="160">Chapter 4: Results &amp; Discussion</option>
-          <option value="310">Chapter 5: Summary &amp; Recommendations</option>
-          <option value="330">References</option>
-          <option value="350">Appendices &amp; Instruments</option>
-        </select>
-
-        <!-- Page Controls -->
-        <button id="prev-page" class="icon-btn" title="Previous Page (Left Arrow)">
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      <div class="viewer-controls">
+        <a href="https://drive.google.com/file/d/1fJMk-bnOyyRQQZj4xumOkgQ1ThTPKd5a/view?usp=sharing" target="_blank"
+          rel="noopener noreferrer" class="btn btn-outline btn-sm" title="Open full view in Google Drive">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z" />
           </svg>
-        </button>
-
-        <span style="font-family: var(--font-mono); font-size: 0.8125rem;">
-          <input type="number" id="page-num" class="page-input" value="1" min="1" max="479">
-          / <span id="page-count">479</span>
-        </span>
-
-        <button id="next-page" class="icon-btn" title="Next Page (Right Arrow)">
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-
-        <!-- Zoom Controls -->
-        <button id="zoom-out" class="icon-btn" title="Zoom Out">
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
-          </svg>
-        </button>
-        <span id="zoom-level" style="font-family: var(--font-mono); font-size: 0.75rem; min-width: 2.75rem; text-align: center;">100%</span>
-        <button id="zoom-in" class="icon-btn" title="Zoom In">
-          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-          </svg>
-        </button>
-        <button id="zoom-fit" class="btn btn-outline btn-sm" title="Fit to Screen Width">Fit</button>
+          Open in Google Drive
+        </a>
 
         <!-- Theme Toggle -->
         <button id="theme-toggle" class="icon-btn" title="Toggle color theme" aria-label="Toggle color theme">
@@ -388,322 +183,18 @@
 
   <!-- Document Viewer Main Area -->
   <main class="viewer-main">
-    <!-- Mode 1: Canvas Container (with PDF.js) -->
-    <div class="canvas-container" id="canvas-container">
-      <div id="loading" class="loading-overlay">
-        <div class="spinner"></div>
-        <div id="loading-text">Initializing Document (32.6 MB)...</div>
-        <div class="progress-bar-track" id="progress-track" style="display: none;">
-          <div class="progress-bar-fill" id="progress-fill"></div>
-        </div>
-      </div>
-      <canvas id="pdf-canvas"></canvas>
-    </div>
-
-    <!-- Mode 2: Native Stream Container (iframe with #toolbar=0) -->
-    <div class="stream-container" id="stream-container">
-      <iframe id="stream-frame" class="stream-frame" title="TUGON Manuscript Stream View"></iframe>
+    <div class="frame-container">
+      <iframe
+        id="drive-frame"
+        class="viewer-frame"
+        src="https://drive.google.com/file/d/1fJMk-bnOyyRQQZj4xumOkgQ1ThTPKd5a/preview"
+        allow="autoplay"
+        title="TUGON Manuscript Protected Preview">
+      </iframe>
     </div>
   </main>
 
-  <!-- Floating Mobile / Quick Action Bottom Bar (Canvas Mode) -->
-  <div class="bottom-bar" id="bottom-bar">
-    <button id="floating-prev" class="icon-btn" title="Previous Page">
-      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-      </svg>
-    </button>
-    <span id="floating-page-info" style="font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 600; padding: 0 0.5rem;">
-      Page 1 of 479
-    </span>
-    <button id="floating-next" class="icon-btn" title="Next Page">
-      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
-  </div>
-
   <script>
-    // Configure Mozilla PDF.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-    const pdfUrl = 'TUGON_FINAL_MANUSCRIPT.pdf';
-    let pdfDoc = null;
-    let pageNum = 1;
-    let pageRendering = false;
-    let pageNumPending = null;
-    let currentRenderTask = null;
-    let scale = 1.35;
-    let currentMode = 'canvas';
-
-    const canvas = document.getElementById('pdf-canvas');
-    const ctx = canvas.getContext('2d');
-    const canvasContainer = document.getElementById('canvas-container');
-    const streamContainer = document.getElementById('stream-container');
-    const streamFrame = document.getElementById('stream-frame');
-    const canvasControls = document.getElementById('canvas-controls');
-    const bottomBar = document.getElementById('bottom-bar');
-
-    const loadingOverlay = document.getElementById('loading');
-    const loadingText = document.getElementById('loading-text');
-    const progressTrack = document.getElementById('progress-track');
-    const progressFill = document.getElementById('progress-fill');
-
-    const pageNumInput = document.getElementById('page-num');
-    const pageCountSpan = document.getElementById('page-count');
-    const floatingInfo = document.getElementById('floating-page-info');
-    const zoomLevel = document.getElementById('zoom-level');
-
-    // Automatically fit initial scale based on viewport width
-    function getOptimalInitialScale() {
-      const screenW = window.innerWidth;
-      if (screenW < 600) return 0.8;
-      if (screenW < 900) return 1.05;
-      return 1.35;
-    }
-    scale = getOptimalInitialScale();
-
-    // Mode Switcher: Canvas vs Fast Stream
-    const btnModeCanvas = document.getElementById('mode-canvas');
-    const btnModeStream = document.getElementById('mode-stream');
-
-    function switchMode(mode) {
-      currentMode = mode;
-      if (mode === 'canvas') {
-        btnModeCanvas.classList.add('active');
-        btnModeStream.classList.remove('active');
-        canvasContainer.style.display = 'flex';
-        streamContainer.style.display = 'none';
-        bottomBar.style.display = 'flex';
-      } else {
-        btnModeStream.classList.add('active');
-        btnModeCanvas.classList.remove('active');
-        canvasContainer.style.display = 'none';
-        streamContainer.style.display = 'block';
-        bottomBar.style.display = 'none';
-
-        // Load stream frame if not loaded yet
-        if (!streamFrame.src || streamFrame.src === 'about:blank') {
-          streamFrame.src = `${pdfUrl}#toolbar=0&navpanes=0&scrollbar=1&page=${pageNum}`;
-        }
-      }
-    }
-
-    btnModeCanvas.addEventListener('click', () => switchMode('canvas'));
-    btnModeStream.addEventListener('click', () => switchMode('stream'));
-
-    // Render Page onto Canvas + Draw Academic Security Watermark
-    function renderPage(num) {
-      // 1. Cancel previous in-flight render cleanly
-      if (currentRenderTask) {
-        try {
-          currentRenderTask.cancel();
-        } catch (e) {}
-        currentRenderTask = null;
-      }
-
-      pageRendering = true;
-      loadingOverlay.style.display = 'flex';
-      loadingText.textContent = `Rendering page ${num} of ${pdfDoc ? pdfDoc.numPages : 479}...`;
-
-      pdfDoc.getPage(num).then(function (page) {
-        const viewport = page.getViewport({ scale: scale });
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-
-        const renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
-
-        currentRenderTask = page.render(renderContext);
-        return currentRenderTask.promise;
-      }).then(function () {
-        currentRenderTask = null;
-        drawWatermark(ctx, canvas.width, canvas.height);
-        pageRendering = false;
-        loadingOverlay.style.display = 'none';
-
-        if (pageNumPending !== null) {
-          const next = pageNumPending;
-          pageNumPending = null;
-          renderPage(next);
-        }
-      }).catch(function (err) {
-        currentRenderTask = null;
-        pageRendering = false;
-
-        // Normal cancellation when user rapidly clicks Next/Prev
-        if (err && (err.name === 'RenderingCancelledException' || (err.message && err.message.includes('cancelled')))) {
-          if (pageNumPending !== null) {
-            const next = pageNumPending;
-            pageNumPending = null;
-            renderPage(next);
-          }
-          return;
-        }
-
-        console.error('Render error:', err);
-        loadingOverlay.style.display = 'none';
-      });
-
-      // Always update UI values immediately
-      pageNum = num;
-      pageNumInput.value = num;
-      floatingInfo.textContent = `Page ${num} of ${pdfDoc ? pdfDoc.numPages : 479}`;
-      zoomLevel.textContent = `${Math.round(scale * 100)}%`;
-    }
-
-    // Draw Light Security Watermark
-    function drawWatermark(context, w, h) {
-      context.save();
-      context.font = '600 16px "JetBrains Mono", monospace';
-      context.fillStyle = 'rgba(210, 72, 15, 0.12)';
-      context.textAlign = 'center';
-      context.translate(w / 2, h / 2);
-      context.rotate(-35 * Math.PI / 180);
-
-      const text = 'TUGON RESEARCH · READ-ONLY PREVIEW · LSPU CCS · DO NOT REPRODUCE';
-      for (let y = -h; y < h; y += 120) {
-        context.fillText(text, 0, y);
-      }
-      context.restore();
-    }
-
-    function queueRenderPage(num) {
-      if (pageRendering) {
-        pageNumPending = num;
-      } else {
-        renderPage(num);
-      }
-    }
-
-    function onPrevPage() {
-      if (pageNum <= 1) return;
-      pageNum--;
-      queueRenderPage(pageNum);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function onNextPage() {
-      if (pdfDoc && pageNum >= pdfDoc.numPages) return;
-      pageNum++;
-      queueRenderPage(pageNum);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Load PDF Document with Live Progress Feedback
-    progressTrack.style.display = 'block';
-
-    const loadingTask = pdfjsLib.getDocument({
-      url: pdfUrl,
-      cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
-      cMapPacked: true,
-    });
-
-    loadingTask.onProgress = function (data) {
-      if (data.total > 0) {
-        const pct = Math.min(100, Math.round((data.loaded / data.total) * 100));
-        const mbLoaded = (data.loaded / (1024 * 1024)).toFixed(1);
-        const mbTotal = (data.total / (1024 * 1024)).toFixed(1);
-        progressFill.style.width = `${pct}%`;
-        loadingText.textContent = `Loading Manuscript: ${pct}% (${mbLoaded} MB / ${mbTotal} MB)...`;
-      } else if (data.loaded > 0) {
-        const mbLoaded = (data.loaded / (1024 * 1024)).toFixed(1);
-        loadingText.textContent = `Loading Manuscript: ${mbLoaded} MB loaded...`;
-      }
-    };
-
-    loadingTask.promise.then(function (pdfDoc_) {
-      pdfDoc = pdfDoc_;
-      pageCountSpan.textContent = pdfDoc.numPages;
-      pageNumInput.max = pdfDoc.numPages;
-      progressTrack.style.display = 'none';
-      renderPage(1);
-    }).catch(function (error) {
-      console.error('Error loading PDF document:', error);
-      progressTrack.style.display = 'none';
-      loadingText.innerHTML = `
-        <div style="color: #ef4444; font-weight: 700; margin-bottom: 0.5rem;">Document load delay</div>
-        <p style="font-size: 0.8125rem; color: var(--muted); margin-bottom: 1rem;">
-          The manuscript is 32.6 MB. If the canvas engine takes too long, switch to <strong>Fast Stream</strong> mode above.
-        </p>
-        <button onclick="switchMode('stream')" class="btn btn-primary btn-sm">Switch to Fast Stream</button>
-      `;
-    });
-
-    // Control Event Listeners
-    document.getElementById('prev-page').addEventListener('click', onPrevPage);
-    document.getElementById('next-page').addEventListener('click', onNextPage);
-    document.getElementById('floating-prev').addEventListener('click', onPrevPage);
-    document.getElementById('floating-next').addEventListener('click', onNextPage);
-
-    pageNumInput.addEventListener('change', function () {
-      let val = parseInt(pageNumInput.value, 10);
-      if (val >= 1 && val <= (pdfDoc ? pdfDoc.numPages : 479)) {
-        queueRenderPage(val);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else {
-        pageNumInput.value = pageNum;
-      }
-    });
-
-    document.getElementById('zoom-in').addEventListener('click', function () {
-      if (scale < 3.0) {
-        scale += 0.2;
-        queueRenderPage(pageNum);
-      }
-    });
-
-    document.getElementById('zoom-out').addEventListener('click', function () {
-      if (scale > 0.6) {
-        scale -= 0.2;
-        queueRenderPage(pageNum);
-      }
-    });
-
-    document.getElementById('zoom-fit').addEventListener('click', function () {
-      const containerW = document.querySelector('.viewer-main').clientWidth - 48;
-      if (pdfDoc) {
-        pdfDoc.getPage(pageNum).then(p => {
-          const defaultViewport = p.getViewport({ scale: 1.0 });
-          scale = Math.min(2.5, Math.max(0.6, containerW / defaultViewport.width));
-          queueRenderPage(pageNum);
-        });
-      }
-    });
-
-    document.getElementById('quick-jump').addEventListener('change', function (e) {
-      const target = parseInt(e.target.value, 10);
-      if (target >= 1 && target <= (pdfDoc ? pdfDoc.numPages : 479)) {
-        queueRenderPage(target);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    });
-
-    // Keyboard Shortcuts (Arrow Keys for navigation) + Block Download Shortcuts
-    window.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft' && document.activeElement !== pageNumInput) {
-        onPrevPage();
-      } else if (e.key === 'ArrowRight' && document.activeElement !== pageNumInput) {
-        onNextPage();
-      } else if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
-        e.preventDefault();
-        alert('Saving is restricted for this read-only review copy.');
-      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
-        e.preventDefault();
-        alert('Printing is restricted for this read-only review copy.');
-      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
-        e.preventDefault();
-      }
-    });
-
-    // Anti-Right-Click Protection
-    window.addEventListener('contextmenu', function (e) {
-      e.preventDefault();
-      return false;
-    });
-
     // Theme Toggle Support
     const htmlEl = document.documentElement;
     const themeBtn = document.getElementById('theme-toggle');
@@ -732,17 +223,23 @@
       });
     }
 
-    // Mobile Touch Swipe support
-    let touchStartX = 0;
-    let touchEndX = 0;
-    window.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, false);
-    window.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      if (touchEndX < touchStartX - 60) onNextPage();
-      if (touchEndX > touchStartX + 60) onPrevPage();
-    }, false);
+    // Block Common Shortcuts
+    window.addEventListener('keydown', function (e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        alert('Saving is restricted for this read-only review copy.');
+      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+        e.preventDefault();
+        alert('Printing is restricted for this read-only review copy.');
+      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+      }
+    });
+
+    window.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      return false;
+    });
   </script>
 </body>
 
