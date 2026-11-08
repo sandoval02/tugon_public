@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TUGON Final Manuscript · Read-Only Academic Preview</title>
+  <meta name="description"
+    content="Protected academic read-only preview of the TUGON Undergraduate Thesis Manuscript (LSPU CCS).">
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Mozilla PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <style>
+    /* Manuscript Viewer Specific Styles */
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .viewer-navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: color-mix(in srgb, var(--bg) 85%, transparent);
+      backdrop-filter: blur(1.25rem);
+      -webkit-backdrop-filter: blur(1.25rem);
+      border-bottom: 1px solid var(--line);
+      padding: 0.625rem 1rem;
+    }
+
+    .viewer-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .viewer-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .viewer-title {
+      font-family: var(--font-display);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .viewer-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .page-input {
+      width: 3.5rem;
+      padding: 0.25rem 0.4rem;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      border: 1px solid var(--line);
+      background: var(--bg-2);
+      color: var(--ink);
+      border-radius: 0.375rem;
+    }
+
+    .page-input:focus {
+      outline: 2px solid var(--accent);
+      border-color: var(--accent);
+    }
+
+    .watermark-banner {
+      background: color-mix(in srgb, var(--accent) 15%, var(--bg-2));
+      border-bottom: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 0.35rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .viewer-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1.5rem 1rem 3rem;
+      overflow-x: auto;
+      background: var(--bg);
+    }
+
+    .canvas-container {
+      position: relative;
+      background: #ffffff;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--line);
+      border-radius: 4px;
+      max-width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    #pdf-canvas {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      pointer-events: none; /* Prevents right-click and image-save */
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(11, 15, 20, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      z-index: 10;
+      transition: opacity 0.2s ease;
+    }
+
+    .spinner {
+      width: 2.25rem;
+      height: 2.25rem;
+      border: 3px solid var(--line);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      background: color-mix(in srgb, var(--bg-2) 90%, transparent);
+      backdrop-filter: blur(1rem);
+      -webkit-backdrop-filter: blur(1rem);
+      border: 1px solid var(--line);
+      border-radius: 9999px;
+      padding: 0.35rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    .quick-jump-select {
+      background: var(--bg-2);
+      color: var(--ink);
+      border: 1px solid var(--line);
+      font-family: var(--font-body);
+      font-size: 0.8125rem;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .viewer-title {
+        font-size: 0.8125rem;
+      }
+      .quick-jump-select {
+        display: none;
+      }
+      .bottom-bar {
+        bottom: 0.5rem;
+        padding: 0.3rem 0.5rem;
+      }
+    }
+  </style>
+</head>
+
+<body oncontextmenu="return false;">
+
+  <!-- Security / Confidentiality Watermark Header -->
+  <div class="watermark-banner">
+    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+    </svg>
+    <span><strong>PROTECTED PREVIEW:</strong> Read-Only Academic Copy · Downloading &amp; Printing Restricted</span>
+  </div>
+
+  <!-- Navigation Toolbar -->
+  <header class="viewer-navbar">
+    <div class="viewer-nav-inner">
+      <div class="viewer-title-group">
+        <a href="index.html" class="btn btn-outline btn-sm" title="Back to Project Overview">
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+          Overview
+        </a>
+        <div class="viewer-title">TUGON Research Manuscript</div>
+        <span class="tag tag-accent" style="font-size: 0.6875rem;">View-Only</span>
+      </div>
+
+      <div class="viewer-controls">
+        <!-- Quick Jump -->
+        <select id="quick-jump" class="quick-jump-select" title="Jump to Chapter">
+          <option value="1">Cover &amp; Title Page</option>
+          <option value="4">Approval Sheet</option>
+          <option value="7">Abstract</option>
+          <option value="12">Table of Contents</option>
+          <option value="17">Chapter 1: Introduction</option>
+          <option value="42">Chapter 2: Literature Review</option>
+          <option value="85">Chapter 3: Methodology</option>
+          <option value="160">Chapter 4: Results &amp; Discussion</option>
+          <option value="310">Chapter 5: Summary &amp; Recommendations</option>
+          <option value="330">References</option>
+          <option value="350">Appendices &amp; Instruments</option>
+        </select>
+
+        <!-- Page Controls -->
+        <button id="prev-page" class="icon-btn" title="Previous Page (Left Arrow)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+
+        <span style="font-family: var(--font-mono); font-size: 0.8125rem;">
+          <input type="number" id="page-num" class="page-input" value="1" min="1" max="479">
+          / <span id="page-count">479</span>
+        </span>
+
+        <button id="next-page" class="icon-btn" title="Next Page (Right Arrow)">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+
+        <!-- Zoom Controls -->
+        <button id="zoom-out" class="icon-btn" title="Zoom Out">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+          </svg>
+        </button>
+        <span id="zoom-level" style="font-family: var(--font-mono); font-size: 0.75rem; min-width: 2.75rem; text-align: center;">100%</span>
+        <button id="zoom-in" class="icon-btn" title="Zoom In">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+          </svg>
+        </button>
+        <button id="zoom-fit" class="btn btn-outline btn-sm" title="Fit to Screen Width">Fit</button>
+        <button id="theme-toggle" class="icon-btn" title="Toggle color theme" aria-label="Toggle color theme">
+          <span id="theme-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Document Canvas Main Area -->
+  <main class="viewer-main">
+    <div class="canvas-container" id="canvas-container">
+      <div id="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <div id="loading-text">Loading Manuscript (Chapter 1–5)...</div>
+      </div>
+      <canvas id="pdf-canvas"></canvas>
+    </div>
+  </main>
+
+  <!-- Floating Mobile / Quick Action Bottom Bar -->
+  <div class="bottom-bar">
+    <button id="floating-prev" class="icon-btn" title="Previous Page">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+    <span id="floating-page-info" style="font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 600; padding: 0 0.5rem;">
+      Page 1 of 479
+    </span>
+    <button id="floating-next" class="icon-btn" title="Next Page">
+      <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    // Configure Mozilla PDF.js worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    const pdfUrl = 'TUGON_FINAL_MANUSCRIPT.pdf';
+    let pdfDoc = null;
+    let pageNum = 1;
+    let pageRendering = false;
+    let pageNumPending = null;
+    let scale = 1.35;
+
+    const canvas = document.getElementById('pdf-canvas');
+    const ctx = canvas.getContext('2d');
+    const loadingOverlay = document.getElementById('loading');
+    const loadingText = document.getElementById('loading-text');
+    const pageNumInput = document.getElementById('page-num');
+    const pageCountSpan = document.getElementById('page-count');
+    const floatingInfo = document.getElementById('floating-page-info');
+    const zoomLevel = document.getElementById('zoom-level');
+
+    // Automatically fit initial scale based on viewport width
+    function getOptimalInitialScale() {
+      const screenW = window.innerWidth;
+      if (screenW < 600) return 0.85;
+      if (screenW < 900) return 1.1;
+      return 1.4;
+    }
+    scale = getOptimalInitialScale();
+
+    // Render Page onto Canvas + Draw Academic Security Watermark
+    function renderPage(num) {
+      pageRendering = true;
+      loadingOverlay.style.display = 'flex';
+      loadingText.textContent = `Rendering page ${num}...`;
+
+      pdfDoc.getPage(num).then(function (page) {
+        const viewport = page.getViewport({ scale: scale });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+
+        const renderTask = page.render(renderContext);
+
+        renderTask.promise.then(function () {
+          // Draw subtle security watermark diagonally across canvas
+          drawWatermark(ctx, canvas.width, canvas.height);
+
+          pageRendering = false;
+          loadingOverlay.style.display = 'none';
+
+          if (pageNumPending !== null) {
+            renderPage(pageNumPending);
+            pageNumPending = null;
+          }
+        });
+      }).catch(err => {
+        console.error('Error rendering page:', err);
+        loadingText.textContent = 'Error rendering page.';
+        pageRendering = false;
+      });
+
+      // Update UI Counters
+      pageNumInput.value = num;
+      floatingInfo.textContent = `Page ${num} of ${pdfDoc ? pdfDoc.numPages : 479}`;
+      zoomLevel.textContent = `${Math.round(scale * 100)}%`;
+    }
+
+    // Draw Light Security Watermark
+    function drawWatermark(context, w, h) {
+      context.save();
+      context.font = '600 18px "JetBrains Mono", monospace';
+      context.fillStyle = 'rgba(210, 72, 15, 0.12)';
+      context.textAlign = 'center';
+      context.translate(w / 2, h / 2);
+      context.rotate(-35 * Math.PI / 180);
+
+      const text = 'TUGON RESEARCH · READ-ONLY PREVIEW · LSPU CCS · DO NOT REPRODUCE';
+      for (let y = -h; y < h; y += 120) {
+        context.fillText(text, 0, y);
+      }
+      context.restore();
+    }
+
+    function queueRenderPage(num) {
+      if (pageRendering) {
+        pageNumPending = num;
+      } else {
+        renderPage(num);
+      }
+    }
+
+    function onPrevPage() {
+      if (pageNum <= 1) return;
+      pageNum--;
+      queueRenderPage(pageNum);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function onNextPage() {
+      if (pdfDoc && pageNum >= pdfDoc.numPages) return;
+      pageNum++;
+      queueRenderPage(pageNum);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Load PDF Document
+    pdfjsLib.getDocument({
+      url: pdfUrl,
+      cMapUrl: 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/cmaps/',
+      cMapPacked: true,
+    }).promise.then(function (pdfDoc_) {
+      pdfDoc = pdfDoc_;
+      pageCountSpan.textContent = pdfDoc.numPages;
+      pageNumInput.max = pdfDoc.numPages;
+      renderPage(pageNum);
+    }).catch(function (error) {
+      console.error('Error loading PDF document:', error);
+      loadingText.innerHTML = `<strong>Error loading document:</strong><br>${error.message}`;
+    });
+
+    // Event Listeners for Controls
+    document.getElementById('prev-page').addEventListener('click', onPrevPage);
+    document.getElementById('next-page').addEventListener('click', onNextPage);
+    document.getElementById('floating-prev').addEventListener('click', onPrevPage);
+    document.getElementById('floating-next').addEventListener('click', onNextPage);
+
+    pageNumInput.addEventListener('change', function () {
+      let val = parseInt(pageNumInput.value, 10);
+      if (val >= 1 && val <= (pdfDoc ? pdfDoc.numPages : 479)) {
+        pageNum = val;
+        queueRenderPage(pageNum);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        pageNumInput.value = pageNum;
+      }
+    });
+
+    document.getElementById('zoom-in').addEventListener('click', function () {
+      if (scale < 3.0) {
+        scale += 0.2;
+        queueRenderPage(pageNum);
+      }
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function () {
+      if (scale > 0.6) {
+        scale -= 0.2;
+        queueRenderPage(pageNum);
+      }
+    });
+
+    document.getElementById('zoom-fit').addEventListener('click', function () {
+      const containerW = document.querySelector('.viewer-main').clientWidth - 32;
+      if (pdfDoc) {
+        pdfDoc.getPage(pageNum).then(p => {
+          const defaultViewport = p.getViewport({ scale: 1.0 });
+          scale = Math.min(2.5, Math.max(0.6, containerW / defaultViewport.width));
+          queueRenderPage(pageNum);
+        });
+      }
+    });
+
+    document.getElementById('quick-jump').addEventListener('change', function (e) {
+      const target = parseInt(e.target.value, 10);
+      if (target >= 1 && target <= (pdfDoc ? pdfDoc.numPages : 479)) {
+        pageNum = target;
+        queueRenderPage(pageNum);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    // Keyboard Shortcuts (Arrow Keys for navigation) + Block Download Shortcuts
+    window.addEventListener('keydown', function (e) {
+      // Left Arrow
+      if (e.key === 'ArrowLeft' && document.activeElement !== pageNumInput) {
+        onPrevPage();
+      }
+      // Right Arrow
+      else if (e.key === 'ArrowRight' && document.activeElement !== pageNumInput) {
+        onNextPage();
+      }
+      // Block Ctrl+S / Cmd+S (Save)
+      else if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+        e.preventDefault();
+        alert('Saving is restricted for this read-only review copy.');
+      }
+      // Block Ctrl+P / Cmd+P (Print)
+      else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+        e.preventDefault();
+        alert('Printing is restricted for this read-only review copy.');
+      }
+      // Block Ctrl+U / Cmd+U (View Source)
+      else if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
+        e.preventDefault();
+      }
+    });
+
+    // Anti-Right-Click Protection
+    window.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      return false;
+    });
+
+    // Theme Toggle Support
+    const htmlEl = document.documentElement;
+    const themeBtn = document.getElementById('theme-toggle');
+    const themeIconEl = document.getElementById('theme-icon');
+
+    function syncThemeIcon(theme) {
+      if (!themeIconEl) return;
+      if (theme === 'dark') {
+        themeIconEl.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`;
+      } else {
+        themeIconEl.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>`;
+      }
+    }
+
+    const currentTheme = localStorage.getItem('tugon-theme') || 'dark';
+    htmlEl.setAttribute('data-theme', currentTheme);
+    syncThemeIcon(currentTheme);
+
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const now = htmlEl.getAttribute('data-theme') || 'dark';
+        const next = now === 'dark' ? 'light' : 'dark';
+        htmlEl.setAttribute('data-theme', next);
+        localStorage.setItem('tugon-theme', next);
+        syncThemeIcon(next);
+      });
+    }
+
+    // Mobile Touch Swipe support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    window.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    window.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 60) onNextPage();
+      if (touchEndX > touchStartX + 60) onPrevPage();
+    }, false);
+  </script>
+</body>
+
+</html>

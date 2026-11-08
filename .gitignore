@@ -26,8 +26,12 @@ dist/
 *.docx
 *.doc
 *.pdf
-*MANUS*
-*manuscript*
+*MANUS*.docx
+*MANUS*.pdf
+*manuscript*.docx
+*manuscript*.pdf
+!tugon_public_site/TUGON_FINAL_MANUSCRIPT.pdf
+!*.html
 
 .vscode/
 .idea/
