@@ -361,6 +361,25 @@ p {
   padding-right: 1.5rem;
 }
 
+.btn-disabled,
+.btn:disabled,
+button.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.btn-disabled:hover,
+.btn:disabled:hover,
+button.btn[disabled]:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: var(--bg-2) !important;
+  border-color: var(--line) !important;
+  color: var(--muted) !important;
+}
+
 /* Badges & Chips */
 .tag {
   display: inline-flex;
@@ -434,7 +453,11 @@ p {
 }
 
 .hero-subtitle .tag {
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
+  max-width: 100%;
+  line-height: 1.4;
+  overflow-wrap: break-word;
 }
 
 .hero-institution {
@@ -939,18 +962,35 @@ p {
     display: none;
   }
 
+  .hero-section {
+    padding: 1.5rem 0 2.25rem;
+  }
+
   .hero-subtitle {
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    gap: 0.45rem;
+    gap: 0.5rem;
     margin-bottom: 1rem;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 0.5rem;
+    box-sizing: border-box;
   }
 
   .hero-subtitle .tag {
     font-size: 0.6875rem;
-    padding: 0.25rem 0.55rem;
+    padding: 0.35rem 0.85rem;
+    white-space: normal;
+    text-align: center;
+    max-width: 100%;
+    line-height: 1.45;
+    border-radius: 9999px;
+    box-sizing: border-box;
+    display: inline-flex;
+    justify-content: center;
+    overflow-wrap: break-word;
   }
 
   .hero-institution {
@@ -962,6 +1002,22 @@ p {
 }
 
 @media (max-width: 480px) {
+  .hero-section {
+    padding: 1.25rem 0 2rem;
+  }
+
+  .hero-subtitle {
+    gap: 0.4rem;
+    padding: 0 0.25rem;
+  }
+
+  .hero-subtitle .tag {
+    font-size: 0.625rem;
+    padding: 0.3rem 0.75rem;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+  }
+
   .navbar {
     width: calc(100% - 1rem);
     margin-top: 0.5rem;

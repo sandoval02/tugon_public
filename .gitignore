@@ -22,9 +22,12 @@ dist/
 .env.*.local
 *.log
 
-# Documents
+# Documents & Manuscripts (Private)
 *.docx
 *.doc
+*.pdf
+*MANUS*
+*manuscript*
 
 .vscode/
 .idea/
