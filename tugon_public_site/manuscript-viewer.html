@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>TUGON Final Manuscript · Protected Academic Preview</title>
   <meta name="description"
     content="Protected academic read-only preview of the TUGON Undergraduate Thesis Manuscript (LSPU CCS).">
@@ -19,15 +19,26 @@
   <link rel="stylesheet" href="styles.css">
 
   <style>
+    html,
+    body {
+      height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       background: var(--bg);
       color: var(--ink);
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       user-select: none;
       -webkit-user-select: none;
-      overflow-x: hidden;
     }
 
     .viewer-navbar {
@@ -38,7 +49,7 @@
       backdrop-filter: blur(1.25rem);
       -webkit-backdrop-filter: blur(1.25rem);
       border-bottom: 1px solid var(--line);
-      padding: 0.625rem 1rem;
+      padding: 0.5rem 1rem;
     }
 
     .viewer-nav-inner {
@@ -54,7 +65,9 @@
     .viewer-title-group {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.625rem;
+      flex-shrink: 1;
+      min-width: 0;
     }
 
     .viewer-title {
@@ -63,13 +76,15 @@
       font-weight: 700;
       color: var(--ink);
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .viewer-controls {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
+      flex-shrink: 0;
     }
 
     .watermark-banner {
@@ -79,11 +94,12 @@
       font-family: var(--font-mono);
       font-size: 0.75rem;
       text-align: center;
-      padding: 0.35rem 1rem;
+      padding: 0.35rem 0.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.5rem;
+      gap: 0.4rem;
+      line-height: 1.35;
     }
 
     .viewer-main {
@@ -92,42 +108,124 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 0.75rem 1rem 1.5rem;
+      padding: 0.625rem 0.75rem 1.25rem;
       background: var(--bg);
       position: relative;
+      box-sizing: border-box;
+      width: 100%;
     }
 
     .frame-container {
       width: 100%;
       max-width: 1200px;
       height: calc(100vh - 7.5rem);
-      min-height: 650px;
-      background: var(--card-bg);
+      height: calc(100dvh - 7.5rem);
+      min-height: 550px;
+      background: #1e1e1e;
       border: 1px solid var(--line);
       border-radius: 12px;
       overflow: hidden;
+      -webkit-overflow-scrolling: touch;
       box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.5);
       position: relative;
     }
 
-    .viewer-frame {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
+    /* Branded protective header covering the entire top bar of the Google Drive frame */
+    .frame-top-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--line);
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      box-sizing: border-box;
+      pointer-events: auto;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
     }
 
+    .frame-top-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--ink);
+      font-family: var(--font-body);
+    }
+
+    /*
+     * Push the iframe up so Google Drive's own toolbar (including the redirect/pop-out icon)
+     * is fully hidden behind .frame-top-bar. The iframe is taller than its container by
+     * the same amount it is shifted up, so the document content aligns correctly.
+     */
+    .viewer-frame {
+      width: 100%;
+      /* Shift up by 64px to ensure Google Drive's native top bar is fully off-screen */
+      height: calc(100% + 64px);
+      margin-top: -64px;
+      border: none;
+      display: block;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Responsive adjustments for Tablets & Mobile */
     @media (max-width: 768px) {
+      .viewer-navbar {
+        padding: 0.45rem 0.65rem;
+      }
+
+      .viewer-nav-inner {
+        gap: 0.5rem;
+      }
+
       .viewer-title {
         font-size: 0.8125rem;
+        max-width: 220px;
       }
+
+      .watermark-banner {
+        font-size: 0.6875rem;
+        padding: 0.3rem 0.5rem;
+      }
+
+      .viewer-main {
+        padding: 0.35rem 0.35rem 0.75rem;
+      }
+
       .frame-container {
-        height: calc(100vh - 8.5rem);
-        min-height: 500px;
+        height: calc(100dvh - 6rem);
+        min-height: 480px;
         border-radius: 8px;
       }
+
+    }
+
+    /* Small Mobile Phones (iPhone SE, Android compact <= 480px) */
+    @media (max-width: 480px) {
+      .viewer-title-group {
+        gap: 0.4rem;
+      }
+
+      .viewer-title {
+        font-size: 0.75rem;
+        max-width: 140px;
+      }
+
       .viewer-main {
-        padding: 0.5rem 0.5rem 1rem;
+        padding: 0.25rem 0.25rem 0.5rem;
+      }
+
+      .frame-container {
+        height: calc(100dvh - 5.5rem);
+        min-height: 420px;
+        border-radius: 6px;
       }
     }
   </style>
@@ -137,11 +235,11 @@
 
   <!-- Security Banner -->
   <div class="watermark-banner">
-    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="flex-shrink:0;">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
     </svg>
-    <span><strong>PROTECTED PREVIEW:</strong> Read-Only Academic Copy · Direct Downloads &amp; Printing Restricted</span>
+    <span><strong>PROTECTED PREVIEW:</strong> Read-Only · Copying, Printing &amp; Downloads Restricted</span>
   </div>
 
   <!-- Navigation Toolbar -->
@@ -149,20 +247,20 @@
     <div class="viewer-nav-inner">
       <div class="viewer-title-group">
         <a href="index.html" class="btn btn-outline btn-sm" title="Back to Project Overview">
-          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
           Overview
         </a>
         <div class="viewer-title">TUGON Research Manuscript</div>
-        <span class="tag tag-accent" style="font-size: 0.6875rem;">View-Only (479 Pages)</span>
+        <span class="tag tag-accent" style="font-size: 0.65rem; padding: 0.15rem 0.5rem;">479 Pages</span>
       </div>
 
       <div class="viewer-controls">
         <!-- Theme Toggle -->
         <button id="theme-toggle" class="icon-btn" title="Toggle color theme" aria-label="Toggle color theme">
           <span id="theme-icon">
-            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
@@ -175,6 +273,20 @@
   <!-- Document Viewer Main Area -->
   <main class="viewer-main">
     <div class="frame-container">
+      <!-- Protective branded header that physically overlays Google Drive's top bar and hides the pop-out redirect icon completely -->
+      <div class="frame-top-bar">
+        <div class="frame-top-title">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--accent);">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <span>Undergraduate Thesis Manuscript</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <span class="tag tag-accent" style="font-size: 0.6875rem;">🔒 Downloads Disabled</span>
+        </div>
+      </div>
+
       <iframe
         id="drive-frame"
         class="viewer-frame"
@@ -194,9 +306,9 @@
     function syncThemeIcon(theme) {
       if (!themeIconEl) return;
       if (theme === 'dark') {
-        themeIconEl.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`;
+        themeIconEl.innerHTML = `<svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>`;
       } else {
-        themeIconEl.innerHTML = `<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>`;
+        themeIconEl.innerHTML = `<svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>`;
       }
     }
 
@@ -214,23 +326,51 @@
       });
     }
 
-    // Block Common Shortcuts
+    // Anti-Copy, Anti-Save, and Anti-Print Protections
     window.addEventListener('keydown', function (e) {
-      if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+      // Block Ctrl+C / Cmd+C (Copy)
+      if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
         e.preventDefault();
-        alert('Saving is restricted for this read-only review copy.');
-      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+        alert('Copying text from this academic manuscript review copy is restricted.');
+      }
+      // Block Ctrl+S / Cmd+S (Save)
+      else if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
         e.preventDefault();
-        alert('Printing is restricted for this read-only review copy.');
-      } else if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
+        alert('Saving is restricted for this academic manuscript review copy.');
+      }
+      // Block Ctrl+P / Cmd+P (Print)
+      else if ((e.ctrlKey || e.metaKey) && (e.key === 'p' || e.key === 'P')) {
+        e.preventDefault();
+        alert('Printing is restricted for this academic manuscript review copy.');
+      }
+      // Block Ctrl+U / Cmd+U (View Source)
+      else if ((e.ctrlKey || e.metaKey) && (e.key === 'u' || e.key === 'U')) {
         e.preventDefault();
       }
     });
 
+    // Disable Right-Click Context Menu
     window.addEventListener('contextmenu', function (e) {
       e.preventDefault();
       return false;
     });
+
+    // Block Clipboard Copy Events
+    document.addEventListener('copy', function (e) {
+      e.preventDefault();
+      if (e.clipboardData) {
+        e.clipboardData.setData('text/plain', '');
+      }
+      alert('Text copying is restricted for this academic manuscript.');
+      return false;
+    });
+
+    // Block Clipboard Cut Events
+    document.addEventListener('cut', function (e) {
+      e.preventDefault();
+      return false;
+    });
+
   </script>
 </body>
 
